@@ -87,7 +87,7 @@
 <style scoped>
     /* 简单的 CSS 样式，您可以根据需要美化 */
     .login-container {
-        max-width: 400px;
+        width: 40%;
         margin: 50px auto;
         padding: 20px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

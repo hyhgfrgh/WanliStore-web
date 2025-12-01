@@ -11,7 +11,7 @@
     <hr>
 
     <div class="fixed-nav-buttons">
-        <button class="register-btn">注册</button>
+        <button class="register-btn" @click="toRegister">注册</button>
         <button class="login-btn" @click="toLogin">登录</button>
     </div>
     
@@ -134,6 +134,9 @@ import Add from '../compents/add.vue';
     }
     const toLogin = () => {
         window.location.href = '/login';
+    }
+    const toRegister = () => {
+        window.location.href = '/register';
     }
     async function uploadImage() {
         if (!file.value) return alert("请选择图片")
