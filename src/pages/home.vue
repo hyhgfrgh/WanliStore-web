@@ -70,7 +70,6 @@ import Update from '../compents/update.vue';
 
     const s = ref([]);
     const delId = ref("")
-
     
     function del(){
         axios.get("/api/del",{
@@ -93,13 +92,6 @@ import Update from '../compents/update.vue';
         })
     }
 
-    const file = ref(null)
-    const previewUrl = ref(null)
-    const result = ref(null)
-    function handleFile(e) {
-        file.value = e.target.files[0]
-        previewUrl.value = URL.createObjectURL(file.value)
-    }
     const toLogin = () => {
         window.location.href = '/login';
     }
