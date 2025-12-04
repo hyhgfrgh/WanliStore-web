@@ -21,19 +21,17 @@
 
     <!-- 增加商品 -->
     <add :getList="getList" /> 
-    
+    <br></br>
+    <update :getList="getList" />
 
     <hr></hr>   
     
-    <br></br>
-    <input v-model="delId"  @keyup.enter="del"></input>
-    <br></br>
-    <button @click="del">DeleteById</button>
-    <br></br>
-    <hr></hr>
+    <DeleteById :getList="getList" />
 
     
-    <update :getList="getList" />
+
+    
+    
 
     
     <p>
@@ -67,6 +65,7 @@ import { onMounted, ref } from 'vue';
 import Show from '../compents/show.vue';
 import Add from '../compents/add.vue';
 import Update from '../compents/update.vue';
+import DeleteById from '@/compents/DeleteById.vue';
 
     const s = ref([]);
     const delId = ref("")
