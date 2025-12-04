@@ -18,22 +18,16 @@
     
     <show :s="s" />
 
-
-    <!-- 增加商品 -->
+    <!-- add -->
     <add :getList="getList" /> 
     <br></br>
+    <!-- update -->
     <update :getList="getList" />
 
     <hr></hr>   
-    
+    <!-- delete by id -->
     <DeleteById :getList="getList" />
 
-    
-
-    
-    
-
-    
     <p>
         <img src="/img/ying.jpg" />
     </p>
