@@ -11,12 +11,7 @@
             
                 <div class="form-group">
                     <label for="password">密码:</label>
-                    <input 
-                    id="password" 
-                    type="password" 
-                    v-model="credentials.password" 
-                    required
-                    >
+                    <input id="password" type="password" v-model="credentials.password" required>
                 </div>
 
                 <p v-if="error" class="error-message">{{ error }}</p>
@@ -27,7 +22,7 @@
             </form>
             
             <p class="register-link">
-            还没有账号？<router-link to="/register">立即注册</router-link>
+                还没有账号？<router-link to="/register">立即注册</router-link>
             </p>
         </div>
     </div>
@@ -41,7 +36,7 @@
 
     const router = useRouter();
 
-    // 定义响应式数据
+
     const credentials = reactive({
         username: '',
         password: ''
@@ -50,23 +45,24 @@
     const isLoading = ref(false);
     const error = ref('');
 
-    // 处理登录表单提交的函数
+
     const handleLogin = async () => {
-    // 1. 重置状态
+
     error.value = '';
     isLoading.value = true;
 
     try {
         // 2. 调用认证服务中的 login 函数
-        const userData = await login({
-        username: credentials.username,
-        password: credentials.password
+            const userData = await login({
+            username: credentials.username,
+            password: credentials.password
         });
 
         // 3. 登录成功：重定向到主页 (假设是 '/')
         // 此时 token 已经在 auth.js 中存储到 localStorage
         console.log('登录成功，用户信息:', userData);
         
+
         // 使用 replace 导航，用户无法通过后退键回到登录页
         router.replace('/'); 
 
@@ -85,7 +81,7 @@
 </script>
 
 <style scoped>
-    /* 简单的 CSS 样式，您可以根据需要美化 */
+
     .login-container {
         width: 40%;
         margin: 50px auto;

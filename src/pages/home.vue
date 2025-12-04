@@ -121,7 +121,9 @@ import Add from '../compents/add.vue';
     function getList(){
         axios.get("/api/list").then((data)=>{
             // console.log(data.data[0].name)
-            s.value = data.data
+            s.value = data.data.data
+            console.log(data.data.message)
+
         })
     }
 
