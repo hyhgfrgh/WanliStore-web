@@ -23,7 +23,8 @@
     <add :getList="getList" /> 
     
 
-    <hr></hr>
+    <hr></hr>   
+    
     <br></br>
     <input v-model="delId"  @keyup.enter="del"></input>
     <br></br>
@@ -31,23 +32,8 @@
     <br></br>
     <hr></hr>
 
-
-    <br></br>
-    <input v-model="update_id"  placeholder="所需更新商品的id编号"></input>
-    <br></br>
-    <input v-model="update_name"  placeholder="更新商品名称"></input>
-    <br></br>
-    <input v-model="update_price" placeholder="该更新商品的价格"></input>
-    <br></br>
-    <input v-model="update_category" placeholder="该更新商品的种类"></input>
-    <br></br>
-    <input v-model="update_img_url" type = "url" placeholder="更新商品图片url"></input>
-    <br></br>
-    <input v-model="update_stock" type = "url" placeholder="更新商品库存"></input>
-    <br></br>
-    <input v-model="update_introduce" type = "url" placeholder="更新商品介绍"></input>
-    <br></br>
-    <button @click="update"> update</button>
+    
+    <update :getList="getList" />
 
     
     <p>
@@ -80,32 +66,12 @@ import axios from 'axios';
 import { onMounted, ref } from 'vue';
 import Show from '../compents/show.vue';
 import Add from '../compents/add.vue';
+import Update from '../compents/update.vue';
 
     const s = ref([]);
     const delId = ref("")
-    const name = ref(""),img_url = ref(""),category = ref("")
-    const price = ref(""),stock = ref(""),introduce = ref("")
 
-    const update_id = ref("")
-    const update_name = ref(""),update_img_url = ref(""),update_category = ref("")
-    const update_price = ref(""),update_stock = ref(""),update_introduce = ref("")
-
-
-
-    function update(){
-        axios.get("/api/update", {
-            params: {
-                id: update_id.value,
-                name: update_name.value,
-                price: update_price.value,
-                stock: update_stock.value,
-                category: update_category.value,
-                img_url: update_img_url.value,
-                introduce: update_introduce.value
-            }
-        }).then((data)=>{getList();})
-    }
-
+    
     function del(){
         axios.get("/api/del",{
             params: {
@@ -140,23 +106,7 @@ import Add from '../compents/add.vue';
     const toRegister = () => {
         window.location.href = '/register';
     }
-    async function uploadImage() {
-        if (!file.value) return alert("请选择图片")
-
-        const form = new FormData()
-        form.append("file", file.value)
-        form.append("strategy_id", 1)
-
-        const res = await axios.post("http://image.wanli.zhiyuansofts.cn/api/v1/upload", form, {
-            headers: {
-                "Content-Type": "multipart/form-data"
-            }
-        })
-        result.value = res.data.data
-        img_url.value = res.data.data.links.url
-        file.value = ""
-        name.value = ""
-    }
+    
     
     onMounted(()=>{
         getList()   
