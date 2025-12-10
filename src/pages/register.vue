@@ -19,18 +19,25 @@
                     <label for="repassword">重复密码:</label>
                     <input id="repassword" type="password" v-model="repassword" required>
                 </div>
-                <p v-if="repassword!='' && password!=repassword" style="color: red;">密码不一致</p>
-                <button @click="register" :disabled="isLoading">
+
+                <p v-if="username == ''" style="color: red;">用户名为空</p>
+                <p v-else-if="nickname==''" style="color: red;">昵称为空</p>
+                <p v-else-if="password==''" style="color: red;">密码为空</p>
+                <p v-else-if="repassword==''" style="color: red;">密码未验证</p>
+                <p v-else-if="repassword!='' && password!=repassword"  style="color: red;">密码不一致</p>
+                
+                
+                <button @click="register" :disabled="isLoading || password == '' || password!=repassword || username=='' || nickname == ''">
                     {{ isLoading ? '注册中...' : '注册' }}
                 </button>
+                <p style="color: red;"> {{ message }} </p>
             </form>
-        </p><p v-else class="login-container">
-            <h1 style="color: green;">注册成功！</h1>
-            <p >
-                点击 <router-link to="/login">此处</router-link> 跳转至登陆页面
+            </p><p v-else class="login-container">
+                <h1 style="color: green;">注册成功！</h1>
+                <p >
+                    点击 <router-link to="/login">此处</router-link> 跳转至登陆页面
+                </p>
             </p>
-            
-        </p>
     </div>
 </template>
 
@@ -42,7 +49,7 @@
 
     const router = useRouter();
     const username = ref(""),nickname = ref(""),password = ref(""),repassword = ref("")
-
+    const message = ref("")
     const registerSuccess = ref(false)
     const isLoading = ref(false);
 
@@ -54,7 +61,11 @@
                 password: password.value
             }
         }).then((data)=>{
-            registerSuccess.value = true
+            console.log(data.data)
+            if(data.data.code == 200)
+                registerSuccess.value = true
+            else
+                message.value = data.data.message
         })
     }
 
