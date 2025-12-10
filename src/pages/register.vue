@@ -34,7 +34,7 @@
             </form>
             </p><p v-else class="login-container">
                 <h1 style="color: green;">注册成功！</h1>
-                <p >
+                <p>
                     点击 <router-link to="/login">此处</router-link> 跳转至登陆页面
                 </p>
             </p>
