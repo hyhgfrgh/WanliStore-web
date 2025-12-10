@@ -47,36 +47,35 @@
 
 
     const handleLogin = async () => {
+        error.value = '';
+        isLoading.value = true;
 
-    error.value = '';
-    isLoading.value = true;
+        try {
+            // 2. 调用认证服务中的 login 函数
+                const userData = await login({
+                username: credentials.username,
+                password: credentials.password
+            });
 
-    try {
-        // 2. 调用认证服务中的 login 函数
-            const userData = await login({
-            username: credentials.username,
-            password: credentials.password
-        });
+            // 3. 登录成功：重定向到主页 (假设是 '/')
+            // 此时 token 已经在 auth.js 中存储到 localStorage
+            console.log('登录成功，用户信息:', userData);
+            
 
-        // 3. 登录成功：重定向到主页 (假设是 '/')
-        // 此时 token 已经在 auth.js 中存储到 localStorage
-        console.log('登录成功，用户信息:', userData);
-        
+            // 使用 replace 导航，用户无法通过后退键回到登录页
+            router.replace('/'); 
 
-        // 使用 replace 导航，用户无法通过后退键回到登录页
-        router.replace('/'); 
-
-    } catch (err) {
-        // 4. 登录失败：显示错误消息
-        console.error('登录失败:', err);
-        // 根据后端返回的错误信息来设置 error 消息
-        error.value = '登录失败，请检查用户名和密码。'; 
-        // 生产环境中，您可能需要更详细地解析 err.response.data.message
-        
-    } finally {
-        // 5. 无论成功或失败，都要解除加载状态
-        isLoading.value = false;
-    }
+        } catch (err) {
+            // 4. 登录失败：显示错误消息
+            console.error('登录失败:', err);
+            // 根据后端返回的错误信息来设置 error 消息
+            error.value = '登录失败，请检查用户名和密码。'; 
+            // 生产环境中，您可能需要更详细地解析 err.response.data.message
+            
+        } finally {
+            // 5. 无论成功或失败，都要解除加载状态
+            isLoading.value = false;
+        }
     };
 </script>
 

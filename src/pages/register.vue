@@ -1,33 +1,33 @@
 <template>
-    <div class="page-background">
-        <div class="login-container">
+    <div  class="page-background">
+        <p v-if="!registerSuccess" class="login-container">
             <h2>用户注册</h2>
-        
             <form @submit.prevent="handleLogin" class="login-form">
                 <div class="form-group">
                     <label for="username">用户名:</label>
-                    <input id="username" type="text" v-model="credentials.username" required>
+                    <input id="username" type="text" v-model="username" required>
                 </div>
                 <div class="form-group">
-                    <label for="username">邮箱:</label>
-                    <input id="useremail" type="text" v-model="credentials.username" required>
+                    <label for="nickname">昵称:</label>
+                    <input id="nickname" type="text" v-model="nickname" required>
                 </div>
                 <div class="form-group">
                     <label for="password">密码:</label>
-                    <input id="password" type="password" v-model="credentials.password" required>
+                    <input id="password" type="password" v-model="password" required>
                 </div>
                 <div class="form-group">
-                    <label for="password">重复密码:</label>
-                    <input id="password" type="password" v-model="credentials.password" required>
+                    <label for="repassword">重复密码:</label>
+                    <input id="repassword" type="password" v-model="repassword" required>
                 </div>
-                <p v-if="error" class="error-message">{{ error }}</p>
 
-                <button type="submit" :disabled="isLoading">
-                    {{ isLoading ? '登录中...' : '登录' }}
+                <button @click="register" :disabled="isLoading">
+                    {{ isLoading ? '注册中...' : '注册' }}
                 </button>
             </form>
-            
-        </div>
+        </p><p v-else class="login-container">
+            <h2 style="color: green;">注册成功！</h2>
+
+        </p>
     </div>
 </template>
 
@@ -36,55 +36,31 @@
     import { ref, reactive } from 'vue';
     import { useRouter } from 'vue-router';
     import { login } from '@/services/auth'; 
+    import axios from 'axios';
 
     const router = useRouter();
 
-    // 定义响应式数据
-    const credentials = reactive({
-        username: '',
-        useremail: '',
-        password: ''
-    });
+    const username = ref(""),nickname = ref(""),password = ref("")
 
+    const registerSuccess = ref(false)
     const isLoading = ref(false);
     const error = ref('');
 
-    // 处理登录表单提交的函数
-    const handleLogin = async () => {
-    // 1. 重置状态
-    error.value = '';
-    isLoading.value = true;
-
-    try {
-        // 2. 调用认证服务中的 login 函数
-        const userData = await login({
-            username: credentials.username,
-            password: credentials.password
-        });
-
-        // 3. 登录成功：重定向到主页 (假设是 '/')
-        // 此时 token 已经在 auth.js 中存储到 localStorage
-        console.log('登录成功，用户信息:', userData);
-        
-        // 使用 replace 导航，用户无法通过后退键回到登录页
-        router.replace('/'); 
-
-    } catch (err) {
-        // 4. 登录失败：显示错误消息
-        console.error('登录失败:', err);
-        // 根据后端返回的错误信息来设置 error 消息
-        error.value = '登录失败，请检查用户名和密码。'; 
-        // 生产环境中，您可能需要更详细地解析 err.response.data.message
-        
-    } finally {
-        // 5. 无论成功或失败，都要解除加载状态
-        isLoading.value = false;
+    function register(){
+        axios.get("/api/register",{
+            params:{
+                username: username.value,
+                nickname: nickname.value,
+                password: password.value
+            }
+        }).then((data)=>{
+            registerSuccess.value = true
+        })
     }
-    };
+
 </script>
 
 <style scoped>
-    /* 简单的 CSS 样式，您可以根据需要美化 */
     .login-container {
         width: 40%;
         margin: 50px auto;
