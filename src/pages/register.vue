@@ -19,14 +19,17 @@
                     <label for="repassword">重复密码:</label>
                     <input id="repassword" type="password" v-model="repassword" required>
                 </div>
-
+                <p v-if="repassword!='' && password!=repassword" style="color: red;">密码不一致</p>
                 <button @click="register" :disabled="isLoading">
                     {{ isLoading ? '注册中...' : '注册' }}
                 </button>
             </form>
         </p><p v-else class="login-container">
-            <h2 style="color: green;">注册成功！</h2>
-
+            <h1 style="color: green;">注册成功！</h1>
+            <p >
+                点击 <router-link to="/login">此处</router-link> 跳转至登陆页面
+            </p>
+            
         </p>
     </div>
 </template>
@@ -35,16 +38,13 @@
 <script setup>
     import { ref, reactive } from 'vue';
     import { useRouter } from 'vue-router';
-    import { login } from '@/services/auth'; 
     import axios from 'axios';
 
     const router = useRouter();
-
-    const username = ref(""),nickname = ref(""),password = ref("")
+    const username = ref(""),nickname = ref(""),password = ref(""),repassword = ref("")
 
     const registerSuccess = ref(false)
     const isLoading = ref(false);
-    const error = ref('');
 
     function register(){
         axios.get("/api/register",{
