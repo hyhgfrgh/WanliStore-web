@@ -1,6 +1,6 @@
 <template>
 
-  <div class="page-background">
+  <div class="page-background" @click.self="router.replace('/')">
 
     <div class="add-container">
 

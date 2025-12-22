@@ -32,7 +32,6 @@
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 import Show from '../compents/show.vue';
-import Update from '../compents/update.vue';
 import DeleteById from '@/compents/DeleteById.vue';
 import DeleteAll from '@/compents/DeleteAll.vue';
 import router from '@/router';

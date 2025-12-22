@@ -1,6 +1,6 @@
 <template>
 
-  <div class="page-background">
+  <div class="page-background"  @click.self="router.replace('/')">
 
     <div class="add-container">
 
@@ -50,183 +50,183 @@
 
 
 <script setup>
-import axios from 'axios'
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+    import axios from 'axios'
+    import { ref } from 'vue'
+    import { useRouter } from 'vue-router'
 
-const router = useRouter()
+    const router = useRouter()
 
-const update_id = ref("")
-const update_name = ref("")
-const update_img_url = ref("")
-const update_category = ref("")
-const update_price = ref("")
-const update_stock = ref("")
-const update_introduce = ref("")
+    const update_id = ref("")
+    const update_name = ref("")
+    const update_img_url = ref("")
+    const update_category = ref("")
+    const update_price = ref("")
+    const update_stock = ref("")
+    const update_introduce = ref("")
 
-function update() {
+    function update() {
 
-  if (!update_id.value) {
-    alert("必须填写商品 ID 才能更新")
-    return
-  }
-
-  axios.get("/api/update", {
-    params: {
-      id: update_id.value,
-      name: update_name.value,
-      price: update_price.value,
-      stock: update_stock.value,
-      category: update_category.value,
-      img_url: update_img_url.value,
-      introduce: update_introduce.value
+    if (!update_id.value) {
+        alert("必须填写商品 ID 才能更新")
+        return
     }
-  }).then(() => {
-    alert("更新成功")
-    clearForm()
+
+    axios.get("/api/update", {
+        params: {
+        id: update_id.value,
+        name: update_name.value,
+        price: update_price.value,
+        stock: update_stock.value,
+        category: update_category.value,
+        img_url: update_img_url.value,
+        introduce: update_introduce.value
+        }
+    }).then(() => {
+        alert("更新成功")
+        clearForm()
+        router.push("/home")
+    })
+    }
+
+    const file = ref(null)
+
+    function handleFile(e) {
+        file.value = e.target.files[0]
+    }
+
+    async function uploadImage() {
+    if (!file.value) return alert("请选择图片")
+
+    const form = new FormData()
+    form.append("file", file.value)
+    form.append("strategy_id", 1)
+
+    const res = await axios.post(
+        "http://image.wanli.zhiyuansofts.cn/api/v1/upload",
+        form,
+        { headers: { "Content-Type": "multipart/form-data" } }
+    )
+
+    update_img_url.value = res.data.data.links.url
+    file.value = null
+    }
+
+    function clearForm() {
+        update_id.value = ""
+        update_name.value = ""
+        update_img_url.value = ""
+        update_category.value = ""
+        update_price.value = ""
+        update_stock.value = ""
+        update_introduce.value = ""
+    }
+
+    function goBack() {
     router.push("/home")
-  })
-}
-
-const file = ref(null)
-
-function handleFile(e) {
-  file.value = e.target.files[0]
-}
-
-async function uploadImage() {
-  if (!file.value) return alert("请选择图片")
-
-  const form = new FormData()
-  form.append("file", file.value)
-  form.append("strategy_id", 1)
-
-  const res = await axios.post(
-    "http://image.wanli.zhiyuansofts.cn/api/v1/upload",
-    form,
-    { headers: { "Content-Type": "multipart/form-data" } }
-  )
-
-  update_img_url.value = res.data.data.links.url
-  file.value = null
-}
-
-function clearForm() {
-  update_id.value = ""
-  update_name.value = ""
-  update_img_url.value = ""
-  update_category.value = ""
-  update_price.value = ""
-  update_stock.value = ""
-  update_introduce.value = ""
-}
-
-function goBack() {
-  router.push("/home")
-}
+    }
 </script>
 
 
 <style scoped>
 
-.page-background{
-  position: fixed;
-  inset: 0;
-  background-image: url('/img/yeshijie.png');
-  background-size: cover;
-  background-position: center;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
+    .page-background{
+    position: fixed;
+    inset: 0;
+    background-image: url('/img/yeshijie.png');
+    background-size: cover;
+    background-position: center;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    }
 
-.page-background::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,0.25);
-  backdrop-filter:blur(2px);
-}
+    .page-background::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,0.25);
+    backdrop-filter:blur(2px);
+    }
 
-.add-container{
-  position:relative;
-  width: 60%;
-  padding: 25px;
+    .add-container{
+    position:relative;
+    width: 60%;
+    padding: 25px;
 
-  background: rgba(255,255,255,0.15);
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.3);
-  backdrop-filter: blur(6px);
+    background: rgba(255,255,255,0.15);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(6px);
 
-  color:white;
-  text-align:center;
-}
+    color:white;
+    text-align:center;
+    }
 
-h2{
-  margin-bottom:15px;
-}
+    h2{
+    margin-bottom:15px;
+    }
 
-.form{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
+    .form{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    }
 
-input, textarea{
-  padding:10px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.6);
-  background: rgba(255,255,255,0.15);
-  color:white;
-}
+    input, textarea{
+    padding:10px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.15);
+    color:white;
+    }
 
-input:focus, textarea:focus{
-  outline:none;
-  border-color:#ff7675;
-}
+    input:focus, textarea:focus{
+    outline:none;
+    border-color:#ff7675;
+    }
 
-.upload-row{
-  display:flex;
-  gap:10px;
-}
+    .upload-row{
+    display:flex;
+    gap:10px;
+    }
 
-.preview img{
-  width:100px;
-  border-radius:10px;
-  margin-top:5px;
-}
+    .preview img{
+    width:100px;
+    border-radius:10px;
+    margin-top:5px;
+    }
 
-.btn-group{
-  display:flex;
-  justify-content:space-between;
-  margin-top:10px;
-}
+    .btn-group{
+    display:flex;
+    justify-content:space-between;
+    margin-top:10px;
+    }
 
-.main-btn{
-  padding: 10px 20px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
+    .main-btn{
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
 
-  background: #ff7675;
-  color: white;
-  font-weight: bold;
-  transition: .2s;
-}
-.main-btn:hover{
-  background:#ff4d4d;
-}
+    background: #ff7675;
+    color: white;
+    font-weight: bold;
+    transition: .2s;
+    }
+    .main-btn:hover{
+    background:#ff4d4d;
+    }
 
-.cancel-btn{
-  padding: 10px 20px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  background: gray;
-  color:white;
-}
-.cancel-btn:hover{
-  background:#555;
-}
+    .cancel-btn{
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    background: gray;
+    color:white;
+    }
+    .cancel-btn:hover{
+    background:#555;
+    }
 
 </style>
