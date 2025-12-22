@@ -65,115 +65,115 @@
         background-position: center;  /* 图片居中显示 */
     }
     .page-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
 
-  background-image: url('public/img/yeshijie.png');
-  background-position: center;
-  background-size: cover;
-}
+      background-image: url('public/img/yeshijie.png');
+      /* background-position: center; */
+      background-size: cover;
+    }
 
-/* 半透明遮罩，提高可读性 */
-.page-background::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  backdrop-filter: blur(2px);
-}
+    /* 半透明遮罩，提高可读性 */
+    .page-background::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(2px);
+    }
 
-/* 主内容容器 */
-.page-background > * {
-  position: relative;
-  color: white;
-}
+    /* 主内容容器 */
+    .page-background > * {
+      position: relative;
+      color: white;
+    }
 
-/* 标题 */
-h1 {
-  text-align: center;
-  margin-top: 40px;
-  font-size: 42px;
-  letter-spacing: 2px;
-}
+    /* 标题 */
+    h1 {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 42px;
+      letter-spacing: 2px;
+    }
 
-h3, p {
-  text-align: center;
-}
+    h3, p {
+      text-align: center;
+    }
 
-/* 右上角按钮 */
-.fixed-nav-buttons{
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1000;
+    /* 右上角按钮 */
+    .fixed-nav-buttons{
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
 
-  display: flex;
-  gap: 12px;
-}
+      display: flex;
+      gap: 12px;
+    }
 
-.fixed-nav-buttons button {
-  border: none;
-  padding: 10px 18px;
-  border-radius: 999px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: bold;
+    .fixed-nav-buttons button {
+      border: none;
+      padding: 10px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
 
-  background: rgba(255,255,255,0.2);
-  color: white;
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(255,255,255,0.3);
-  transition: all .2s;
-}
+      background: rgba(255,255,255,0.2);
+      color: white;
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.3);
+      transition: all .2s;
+    }
 
-.fixed-nav-buttons button:hover {
-  background: rgba(255,255,255,0.4);
-}
+    .fixed-nav-buttons button:hover {
+      background: rgba(255,255,255,0.4);
+    }
 
-/* 中心功能区容器 */
-.center-box {
-  width: 60%;
-  margin: 40px auto;
-  padding: 25px;
+    /* 中心功能区容器 */
+    .center-box {
+      width: 60%;
+      margin: 40px auto;
+      padding: 25px;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
 
-  background: rgba(255,255,255,0.15);
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.3);
-  backdrop-filter: blur(6px);
-}
+      background: rgba(255,255,255,0.15);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.3);
+      backdrop-filter: blur(6px);
+    }
 
-/* 组件之间的分割线 */
-.center-box hr {
-  width: 80%;
-  border: none;
-  height: 1px;
-  background: rgba(255,255,255,0.5);
-}
+    /* 组件之间的分割线 */
+    .center-box hr {
+      width: 80%;
+      border: none;
+      height: 1px;
+      background: rgba(255,255,255,0.5);
+    }
 
-/* 下方按钮统一风格 */
-.center-box button {
-  padding: 10px 20px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
+    /* 下方按钮统一风格 */
+    .center-box button {
+      padding: 10px 20px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
 
-  background: #ff7675;
-  color: white;
-  font-weight: bold;
-  transition: .2s;
-}
+      background: #ff7675;
+      color: white;
+      font-weight: bold;
+      transition: .2s;
+    }
 
-.center-box button:hover {
-  background: #ff4d4d;
-}
+    .center-box button:hover {
+      background: #ff4d4d;
+    }
 
 </style>
 

@@ -1,6 +1,6 @@
 <template>
     <div  class="page-background">
-        <p v-if="!registerSuccess" class="login-container">
+        <div v-if="!registerSuccess" class="login-container">
             <h2>用户注册</h2>
             <form @submit.prevent="handleLogin" class="login-form">
                 <div class="form-group">
@@ -32,12 +32,13 @@
                 </button>
                 <p style="color: red;"> {{ message }} </p>
             </form>
-            </p><p v-else class="login-container">
-                <h1 style="color: green;">注册成功！</h1>
-                <p>
-                    点击 <router-link to="/login">此处</router-link> 跳转至登陆页面
-                </p>
-            </p>
+        </div>
+        <div v-else class="login-container">
+            <h1 style="color: green;">注册成功！</h1>
+            <div>
+                点击 <router-link to="/login">此处</router-link> 跳转至登陆页面
+            </div>
+        </div>
     </div>
 </template>
 
