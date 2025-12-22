@@ -14,8 +14,9 @@
                     <input id="password" type="password" v-model="credentials.password" required>
                 </div>
 
-                <p v-if="error" class="error-message">{{ error }}</p>
-
+                <div v-if="triedSubmit && error!=null" class="error-message">
+                    <p color="red">{{ error }}</p>
+                </div>
                 <button type="submit" :disabled="isLoading">
                     {{ isLoading ? '登录中...' : '登录' }}
                 </button>
@@ -33,9 +34,8 @@
     import { ref, reactive } from 'vue';
     import { useRouter } from 'vue-router';
     import { login } from '@/services/auth'; 
-
+    import axios from 'axios';
     const router = useRouter();
-
 
     const credentials = reactive({
         username: '',
@@ -44,128 +44,162 @@
 
     const isLoading = ref(false);
     const error = ref('');
+    const triedSubmit = ref(false);
 
+    // 登录校验，统一逻辑
+    const validate = () => {
+        if(!credentials.username.trim()) return "用户名不能为空"
+        if(!credentials.password.trim()) return "密码不能为空"
+        if(credentials.password.length < 6) return "密码至少6位"
+        return null
+    }
 
     const handleLogin = async () => {
         error.value = '';
+        triedSubmit.value = true;
+
+        const err = validate();
+        if(err){
+            error.value = err;
+            return;
+        }
         isLoading.value = true;
-
-        try {
-            // 2. 调用认证服务中的 login 函数
-                const userData = await login({
-                username: credentials.username,
-                password: credentials.password
+        try{
+            const res = await axios.get("/api/auth/login",{
+                params: {
+                    username: credentials.username.trim(),
+                    password: credentials.password
+                }
             });
+            if(res.data.code === 200){
+                const token = res.data.data.token
+                localStorage.setItem('token',token);
 
-            // 3. 登录成功：重定向到主页 (假设是 '/')
-            // 此时 token 已经在 auth.js 中存储到 localStorage
-            console.log('登录成功，用户信息:', userData);
-            
-
-            // 使用 replace 导航，用户无法通过后退键回到登录页
-            router.replace('/'); 
-
-        } catch (err) {
-            // 4. 登录失败：显示错误消息
-            console.error('登录失败:', err);
-            // 根据后端返回的错误信息来设置 error 消息
-            error.value = '登录失败，请检查用户名和密码。'; 
-            // 生产环境中，您可能需要更详细地解析 err.response.data.message
-            
-        } finally {
-            // 5. 无论成功或失败，都要解除加载状态
-            isLoading.value = false;
+                console.log("登录成功:", res.data.data)
+                router.replace('/');
+            } else {
+                error.value = res.data.message || "账号或密码错误";
+            }
+        }catch(e){
+            message.value = "服务器异常，请稍后再试"
+        }finally{
+            isLoading.value = false
         }
     };
+
 </script>
 
 <style scoped>
+.page-background {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
 
-    .login-container {
-        width: 40%;
-        margin: 50px auto;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-        text-align: center;
-        background-color: rgba(80, 180, 216, 0.4);
-    }
-    .page-background {
-        /* 使其占据整个视口 */
-        position: fixed; /* 固定在视口，不随滚动条移动 */
-        top: 0;
-        left: 0;
-        width: 100vw;   /* 100% 视口宽度 */
-        height: 100vh;  /* 100% 视口高度 */
-        
-        /* 设置背景图片 */
-        background-image: url('public/img/xiaogong.png'); /* !!! 替换成你的图片路径 !!! */
-        background-size: cover;       /* 确保图片覆盖整个容器，可能会裁剪 */
-        background-position: center;  /* 图片居中显示 */
-        background-repeat: no-repeat; /* 防止图片重复 */
-        
-        /* 确保登录容器能在其内部居中 */
-        display: flex;
-        justify-content: center; /* 水平居中 */
-        align-items: center;     /* 垂直居中 */
-        
-        /* 可以根据需要添加一个半透明的蒙版，使登录框更突出 */
-        background-color: rgba(80, 180, 216, 0.8); /* 灰色半透明蒙版 */ 
-    }
-    .login-form {
-        display: flex;
-        flex-direction: column;
+  background-image: url('/img/yeshijie.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: rgba(0,0,0,0.3);
+}
+
+    .page-background::before{
+    content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.25);
+        backdrop-filter: blur(2px);
     }
 
-    .form-group {
-        text-align: left;
-        margin-bottom: 15px;
-    }
 
-    label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-    }
+/* 登录容器 */
+.login-container {
+    width: 60%;
+    margin: 40px auto;
+    padding: 25px;
 
-    input {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box; /* 确保 padding 不会增加宽度 */
-    }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
 
-    button {
-        padding: 10px 15px;
-        background-color: #42b983; /* Vue 绿色 */
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-        transition: background-color 0.3s;
-    }
+    background: rgba(255,255,255,0.15);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(6px);
+}
 
-    button:hover:not(:disabled) {
-        background-color: #368e65;
-    }
+/* 标题 */
+.login-container h2{
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+  font-size: 28px;
+}
 
-    button:disabled {
-        background-color: #a3d9bf;
-        cursor: not-allowed;
-    }
+/* 表单布局 */
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
 
-    .error-message {
-        color: red;
-        margin-top: -10px;
-        margin-bottom: 15px;
-    }
+.form-group {
+  text-align: left;
+  margin-bottom: 18px;
+}
 
-    .register-link {
-        margin-top: 20px;
-        font-size: 0.9em;
-    }
+label {
+  font-weight: bold;
+}
 
+/* 输入框 */
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+
+  border: 1px solid rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.2);
+  color:white;
+
+  outline: none;
+}
+
+input::placeholder{
+  color:#eee;
+}
+
+button {
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+
+    background: #ff7675;
+    color: white;
+    font-weight: bold;
+    transition: .2s;
+}
+
+button:hover {
+    background: #ff4d4d;
+}
+
+
+.register-link{
+  margin-top:15px;
+}
+
+.register-link a{
+  color:#7aff8c;
+  font-weight:bold;
+}
+
+    
     
 </style>

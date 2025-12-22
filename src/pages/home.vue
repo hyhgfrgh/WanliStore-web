@@ -18,23 +18,96 @@
     
     <show :s="s" />
     <div class="center-box">
-        <!-- add -->
-        <add :getList="getList" /> 
-        <br></br>
-        <!-- update -->
-        <update :getList="getList" />
-
-        <hr></hr>   
-        <!-- delete by id -->
-        <DeleteById :getList="getList" />
-
-
-        <hr></hr>
-        <button @click="deleteAll"> DeleteAll</button>
+        <button @click="router.replace('/add')"  >新增商品</button><hr></hr>
+        <button @click="router.replace('/update')">更新商品信息</button><hr></hr>   
+        <DeleteById :getList="getList" /><hr></hr>
+        <DeleteAll :getList="getList" :s="s"/>
     </div>
 </div></template>
 
+
+
+<!-- js -->
+<script setup>
+import axios from 'axios';
+import { onMounted, ref } from 'vue';
+import Show from '../compents/show.vue';
+import Update from '../compents/update.vue';
+import DeleteById from '@/compents/DeleteById.vue';
+import DeleteAll from '@/compents/DeleteAll.vue';
+import router from '@/router';
+
+    const s = ref([]);
+    
+    function getList(){
+        axios.get("/api/list").then((data)=>{
+            // console.log(data.data[0].name)
+            s.value = data.data.data
+            console.log(data.data.message)
+
+        })
+    }
+
+    const toLogin = () => {
+        window.location.href = '/login';
+    }
+    const toRegister = () => {
+        window.location.href = '/register';
+    }
+    
+    
+    onMounted(()=>{
+        getList()   
+    })
+
+
+</script>
+
+
+
+
+<!-- CSS -->
 <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 0px;
+      font-size: 42px;
+      letter-spacing: 2px;
+    }
+    h3, p {
+      text-align: center;
+    }
+    
+    .page-background {
+      position: relative;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-image: url('img/yeshijie.png');
+      background-position: center;
+      background-size: cover;
+    }
+
+    /* 半透明遮罩，提高可读性 */
+    .page-background::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.25);
+      backdrop-filter: blur(2px);
+    }
+
+    /* 主内容容器 */
+    .page-background > * {
+      position: relative;
+      color: white;
+    }
+
     .fixed-nav-buttons{
         position: fixed;
         
@@ -46,74 +119,6 @@
         display: flex;
         gap: 10px;
     }
-    .center-box {
-    display: flex;
-    flex-direction: column;   /* 垂直排列 */
-    align-items: center;      /* 水平居中 */
-    justify-content: center;  /* 垂直居中（可选） */
-    }
-
-    .page-background {
-        /* 使其占据整个视口 */
-        position: fixed;/* 固定在视口，不随滚动条移动 */
-        top: 0;
-        left: 0;
-        width: 100vw;   /* 100% 视口宽度 */
-        height: 100vh; 
-        background-image: url('public/img/yeshijie.png'); /* !!! 替换成你的图片路径 !!! */
-        /*background-size: cover;       /* 确保图片覆盖整个容器，可能会裁剪 */
-        background-position: center;  /* 图片居中显示 */
-    }
-    .page-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-
-      background-image: url('public/img/yeshijie.png');
-      /* background-position: center; */
-      background-size: cover;
-    }
-
-    /* 半透明遮罩，提高可读性 */
-    .page-background::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.45);
-      backdrop-filter: blur(2px);
-    }
-
-    /* 主内容容器 */
-    .page-background > * {
-      position: relative;
-      color: white;
-    }
-
-    /* 标题 */
-    h1 {
-      text-align: center;
-      margin-top: 40px;
-      font-size: 42px;
-      letter-spacing: 2px;
-    }
-
-    h3, p {
-      text-align: center;
-    }
-
-    /* 右上角按钮 */
-    .fixed-nav-buttons{
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 1000;
-
-      display: flex;
-      gap: 12px;
-    }
-
     .fixed-nav-buttons button {
       border: none;
       padding: 10px 18px;
@@ -132,7 +137,6 @@
     .fixed-nav-buttons button:hover {
       background: rgba(255,255,255,0.4);
     }
-
     /* 中心功能区容器 */
     .center-box {
       width: 60%;
@@ -176,51 +180,3 @@
     }
 
 </style>
-
-
-<script setup>
-import axios from 'axios';
-import { onMounted, ref } from 'vue';
-import Show from '../compents/show.vue';
-import Add from '../compents/add.vue';
-import Update from '../compents/update.vue';
-import DeleteById from '@/compents/DeleteById.vue';
-
-    const s = ref([]);
-    const delId = ref("")
-    
-    function del(){
-        axios.get("/api/del",{
-            params: {
-                id: delId.value
-            }
-        }).then((data)=>getList())
-    }
-
-    function deleteAll(){
-        axios.get("/api/delAll").then((data)=>{s.value = []})
-    }
-    
-    function getList(){
-        axios.get("/api/list").then((data)=>{
-            // console.log(data.data[0].name)
-            s.value = data.data.data
-            console.log(data.data.message)
-
-        })
-    }
-
-    const toLogin = () => {
-        window.location.href = '/login';
-    }
-    const toRegister = () => {
-        window.location.href = '/register';
-    }
-    
-    
-    onMounted(()=>{
-        getList()   
-    })
-
-
-</script>

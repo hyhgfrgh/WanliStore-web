@@ -1,6 +1,6 @@
 <template>
     <div  class="page-background">
-        <div v-if="!registerSuccess" class="login-container">
+        <div v-if="!registerSuccess" class="register-container">
             <h2>用户注册</h2>
             <form @submit.prevent="handleLogin" class="login-form">
                 <div class="form-group">
@@ -20,17 +20,15 @@
                     <input id="repassword" type="password" v-model="repassword" required>
                 </div>
 
-                <p v-if="username == ''" style="color: red;">用户名为空</p>
-                <p v-else-if="nickname==''" style="color: red;">昵称为空</p>
-                <p v-else-if="password==''" style="color: red;">密码为空</p>
-                <p v-else-if="repassword==''" style="color: red;">密码未验证</p>
-                <p v-else-if="repassword!='' && password!=repassword"  style="color: red;">密码不一致</p>
+                <p v-if="triedSubmit && message" style="color:red;">
+                    {{ message }}
+                </p>
+
                 
-                
-                <button @click="register" :disabled="isLoading || password == '' || password!=repassword || username=='' || nickname == ''">
+                <button @click="register" :disabled="isLoading">
                     {{ isLoading ? '注册中...' : '注册' }}
                 </button>
-                <p style="color: red;"> {{ message }} </p>
+
             </form>
         </div>
         <div v-else class="login-container">
@@ -43,120 +41,177 @@
 </template>
 
 <script setup>
-    import { ref, reactive } from 'vue';
-    import { useRouter } from 'vue-router';
-    import axios from 'axios';
+    import { ref } from 'vue'
+    import axios from 'axios'
 
-    const router = useRouter();
     const username = ref(""),nickname = ref(""),password = ref(""),repassword = ref("")
-    const message = ref("")
-    const registerSuccess = ref(false)
-    const isLoading = ref(false);
+    const message = ref(""),registerSuccess = ref(false),isLoading = ref(false)
+    const validate = () => {
+        if (!username.value.trim()) return "用户名不能为空"
+        if (username.value.trim().length < 3) return "用户名至少 3 个字符"
 
-    function register(){
-        axios.get("/api/register",{
-            params:{
-                username: username.value,
-                nickname: nickname.value,
-                password: password.value
-            }
-        }).then((data)=>{
-            console.log(data.data)
-            if(data.data.code == 200)
-                registerSuccess.value = true
-            else
-                message.value = data.data.message
-        })
+        if (!nickname.value.trim()) return "昵称不能为空"
+
+        if (!password.value) return "密码不能为空"
+        if (password.value.length < 6) return "密码至少 6 位"
+        if (!/^(?=.*[0-9])(?=.*[A-Za-z]).+$/.test(password.value))
+            return "密码需要包含字母和数字"
+
+        if (!repassword.value) return "请重复密码"
+        if (password.value !== repassword.value) return "两次密码不一致"
+
+        return null
     }
+    const triedSubmit = ref(false)
+
+    async function register() {
+        message.value = ""
+        triedSubmit.value = true
+
+        const err = validate()
+        if (err) {
+            message.value = err
+            return
+        }
+
+        isLoading.value = true
+
+        try {
+            const res = await axios.get("/api/register",{
+                params: {
+                    username: username.value,
+                    nickname: nickname.value,
+                    password: password.value
+                }
+            })
+
+            if(res.data.code === 200){
+                registerSuccess.value = true
+            }else{
+                message.value = res.data.message || "注册失败"
+            }
+        } catch (e){
+            message.value = "服务器异常，请稍后再试"
+        } finally {
+            isLoading.value = false
+        }
+    }
+
 
 </script>
 
 <style scoped>
-    .login-container {
-        width: 40%;
-        margin: 50px auto;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-        text-align: center;
-        background-color: rgba(80, 180, 216, 0.4);
-    }
+
     .page-background {
-        /* 使其占据整个视口 */
-        position: fixed; /* 固定在视口，不随滚动条移动 */
-        top: 0;
-        left: 0;
-        width: 100vw;   /* 100% 视口宽度 */
-        height: 100vh;  /* 100% 视口高度 */
-        
-        /* 设置背景图片 */
-        background-image: url('public/img/xiaogong.png'); /* !!! 替换成你的图片路径 !!! */
-        background-size: cover;       /* 确保图片覆盖整个容器，可能会裁剪 */
-        background-position: center;  /* 图片居中显示 */
-        background-repeat: no-repeat; /* 防止图片重复 */
-        
-        /* 确保登录容器能在其内部居中 */
-        display: flex;
-        justify-content: center; /* 水平居中 */
-        align-items: center;     /* 垂直居中 */
-        
-        /* 可以根据需要添加一个半透明的蒙版，使登录框更突出 */
-        background-color: rgba(80, 180, 216, 0.8); /* 灰色半透明蒙版 */ 
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+
+    background-image: url('/img/yeshijie.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba(0,0,0,0.3);
     }
-    .login-form {
+
+    .page-background::before{
+    content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.25);
+        backdrop-filter: blur(2px);
+    }
+
+
+    /* 登录容器 */
+    .register-container {
+    width: 60%;
+        margin: 40px auto;
+        padding: 25px;
+
         display: flex;
         flex-direction: column;
+        align-items: center;
+        gap: 15px;
+
+        background: rgba(255,255,255,0.15);
+        border-radius: 16px;
+        border: 1px solid rgba(255,255,255,0.3);
+        backdrop-filter: blur(6px);
+    }
+
+    /* 标题 */
+    .register-container h2{
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    font-size: 28px;
+    }
+
+    /* 表单布局 */
+    .login-form {
+    display: flex;
+    flex-direction: column;
     }
 
     .form-group {
-        text-align: left;
-        margin-bottom: 15px;
+    text-align: left;
+    margin-bottom: 18px;
     }
 
     label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
+    font-weight: bold;
     }
 
+    /* 输入框 */
     input {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box; /* 确保 padding 不会增加宽度 */
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+
+    border: 1px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.2);
+    color:white;
+
+    outline: none;
+    }
+
+    input::placeholder{
+    color:#eee;
     }
 
     button {
-        padding: 10px 15px;
-        background-color: #42b983; /* Vue 绿色 */
-        color: white;
+        padding: 10px 20px;
+        border-radius: 12px;
         border: none;
-        border-radius: 4px;
         cursor: pointer;
-        font-size: 16px;
-        transition: background-color 0.3s;
+
+        background: #ff7675;
+        color: white;
+        font-weight: bold;
+        transition: .2s;
     }
 
-    button:hover:not(:disabled) {
-        background-color: #368e65;
+    button:hover {
+        background: #ff4d4d;
     }
 
-    button:disabled {
-        background-color: #a3d9bf;
-        cursor: not-allowed;
+    /* 注册链接 */
+    .register-link{
+    margin-top:15px;
     }
 
-    .error-message {
-        color: red;
-        margin-top: -10px;
-        margin-bottom: 15px;
+    .register-link a{
+    color:#ffd37a;
+    font-weight:bold;
     }
 
-    .register-link {
-        margin-top: 20px;
-        font-size: 0.9em;
-    }
-
+    
     
 </style>

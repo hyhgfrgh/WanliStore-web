@@ -16,7 +16,6 @@
             
             <input v-model="update_stock" placeholder="待更新的商品库存" required/>
             <br></br>
-            <!-- <input v-model="introduce "  @keyup.enter="add" placeholder="商品介绍" required/> -->
              <textarea v-model="update_introduce" placeholder="待更新的商品介绍" rows="4" class="big-input" required/>
             <br></br>
             <input v-model="update_img_url" type = "url" placeholder="待更新的商品图片url" required/>
