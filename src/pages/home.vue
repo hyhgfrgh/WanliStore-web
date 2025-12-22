@@ -10,22 +10,23 @@
     </p>
     <hr>
 
-    <div class="fixed-nav-buttons">
-        <button class="register-btn" @click="toRegister">注册</button>
-        <button class="login-btn" @click="toLogin">登录</button>
+    <div v-if="!hasToken" class="fixed-nav-buttons">
+        <button @click="toRegister">注册</button>
+        <button @click="toLogin">登录</button>
+    </div>
+    <div v-else class="fixed-nav-buttons">
+        <button @click="toUser">主页</button>
+        <button @click="Exit">退出登陆</button>
     </div>
     
-    
     <show :s="s" />
-    <div class="center-box">
+    <div  class="center-box">
         <button @click="router.replace('/add')"  >新增商品</button><hr></hr>
         <button @click="router.replace('/update')">更新商品信息</button><hr></hr>   
         <DeleteById :getList="getList" /><hr></hr>
         <DeleteAll :getList="getList" :s="s"/>
     </div>
 </div></template>
-
-
 
 <!-- js -->
 <script setup>
@@ -35,6 +36,9 @@ import Show from '../compents/show.vue';
 import DeleteById from '@/compents/DeleteById.vue';
 import DeleteAll from '@/compents/DeleteAll.vue';
 import router from '@/router';
+import { hasToken } from '@/store/auth';
+
+
 
     const s = ref([]);
     
@@ -50,10 +54,16 @@ import router from '@/router';
     const toLogin = () => {
         window.location.href = '/login';
     }
+    const toUser = () => {
+        window.location.href = '/user';
+    }
     const toRegister = () => {
         window.location.href = '/register';
     }
-    
+    const Exit = () => {
+        hasToken.value = false
+        localStorage.removeItem("token")
+    }
     
     onMounted(()=>{
         getList()   

@@ -33,8 +33,10 @@
 <script setup>
     import { ref, reactive } from 'vue';
     import { useRouter } from 'vue-router';
-    import { login } from '@/services/auth'; 
     import axios from 'axios';
+    import { hasToken } from '@/store/auth';
+
+
     const router = useRouter();
 
     const credentials = reactive({
@@ -72,8 +74,11 @@
                 }
             });
             if(res.data.code === 200){
-                const token = res.data.data.token
+
+                // 暂时用id当作 token
+                const token = res.data.data
                 localStorage.setItem('token',token);
+                hasToken.value = true;
 
                 console.log("登录成功:", res.data.data)
                 router.replace('/');
