@@ -62,7 +62,7 @@ import { hasToken } from '@/store/auth';
     }
     const Exit = () => {
         hasToken.value = false
-        localStorage.removeItem("token")
+        localStorage.removeItem("userInfo")
     }
     
     onMounted(()=>{

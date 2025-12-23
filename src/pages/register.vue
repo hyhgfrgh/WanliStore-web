@@ -75,13 +75,14 @@
         }
 
         isLoading.value = true
-
+        
         try {
             const res = await axios.get("/api/register",{
                 params: {
                     username: username.value,
                     nickname: nickname.value,
-                    password: password.value
+                    password: password.value,
+                    start_time: new Date().toISOString().slice(0,16).replace('T',' ')
                 }
             })
 

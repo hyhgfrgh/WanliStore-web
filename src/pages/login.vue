@@ -76,8 +76,9 @@
             if(res.data.code === 200){
 
                 // 暂时用id当作 token
-                const token = res.data.data
-                localStorage.setItem('token',token);
+                const user = res.data.data
+                localStorage.setItem('userInfo',JSON.stringify(user));
+                
                 hasToken.value = true;
 
                 console.log("登录成功:", res.data.data)
