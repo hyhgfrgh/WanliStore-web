@@ -6,15 +6,14 @@
             <form @submit.prevent="handleLogin" class="login-form">
                 <div class="form-group">
                     <label for="username">用户名/邮箱:</label>
-                    <input id="username" type="text" v-model="credentials.username" required>
+                    <input id="username" type="text" v-model="username">
                 </div>
-            
                 <div class="form-group">
                     <label for="password">密码:</label>
-                    <input id="password" type="password" v-model="credentials.password" required>
+                    <input id="password" type="password" v-model="password">
                 </div>
 
-                <div v-if="triedSubmit && error!=null" class="error-message">
+                <div v-if="triedSubmit && error" class="error-message">
                     <p color="red">{{ error }}</p>
                 </div>
                 <button type="submit" :disabled="isLoading">
@@ -29,33 +28,26 @@
     </div>
 </template>
 
-
 <script setup>
-    import { ref, reactive } from 'vue';
-    import { useRouter } from 'vue-router';
+    import { ref } from 'vue';
     import axios from 'axios';
     import { hasToken } from '@/store/auth';
     import router from '@/router';
-
-    // const router = useRouter();
-
-    const credentials = reactive({
-        username: '',
-        password: ''
-    });
+    
+    const  username = ref(''),password = ref('');
 
     const isLoading = ref(false);
     const error = ref('');
     const triedSubmit = ref(false);
 
+
     // 登录校验，统一逻辑
     const validate = () => {
-        if(!credentials.username.trim()) return "用户名不能为空"
-        if(!credentials.password.trim()) return "密码不能为空"
-        if(credentials.password.length < 6) return "密码至少6位"
+        if(!username.value) return "请填写用户名"
+        if(!password.value) return "请填写密码"
+        if(password.value.length < 6) return "密码至少6位"
         return null
     }
-
     const handleLogin = async () => {
         error.value = '';
         triedSubmit.value = true;
@@ -64,33 +56,34 @@
         if(err){
             error.value = err;
             return;
-        }
-        isLoading.value = true;
-        try{
-            const res = await axios.get("/api/auth/login",{
-                params: {
-                    username: credentials.username.trim(),
-                    password: credentials.password
+        }else{
+            isLoading.value = true;
+            try{
+                const res = await axios.get("/api/auth/login",{
+                    params: {
+                        username: username.value,
+                        password: password.value
+                    }
+                });
+                if(res.data.code === 200){
+                    // 暂时用 user 当作 token
+                    const user = res.data.data
+                    localStorage.setItem('userInfo',JSON.stringify(user));
+                    
+                    hasToken.value = true;
+
+                    console.log("登录成功:", res.data.data)
+                    router.replace('/');
+                } else {
+                    error.value = res.data.message || "账号或密码错误";
                 }
-            });
-            if(res.data.code === 200){
-
-                // 暂时用id当作 token
-                const user = res.data.data
-                localStorage.setItem('userInfo',JSON.stringify(user));
-                
-                hasToken.value = true;
-
-                console.log("登录成功:", res.data.data)
-                router.replace('/');
-            } else {
-                error.value = res.data.message || "账号或密码错误";
+            }catch(e){
+                error.value = "服务器异常，请稍后再试"
+            }finally{
+                isLoading.value = false
             }
-        }catch(e){
-            message.value = "服务器异常，请稍后再试"
-        }finally{
-            isLoading.value = false
         }
+        
     };
 
 </script>

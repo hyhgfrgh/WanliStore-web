@@ -18,7 +18,7 @@
         <button @click="toUser">主页</button>
         <button @click="Exit">退出登陆</button>
     </div>
-    
+      
     <show :s="s" />
     <div  class="center-box">
         <button @click="router.replace('/add')"  >新增商品</button><hr></hr>
@@ -63,6 +63,8 @@ import { hasToken } from '@/store/auth';
     const Exit = () => {
         hasToken.value = false
         localStorage.removeItem("userInfo")
+        alert("已退出登录")
+        router.replace("/home")
     }
     
     onMounted(()=>{
