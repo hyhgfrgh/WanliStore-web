@@ -11,6 +11,8 @@
             <h2>商品库存: {{ s.stock}}</h2>
             <h2>商品价格: {{ s.price}}</h2>
             <h2>商品介绍: {{ s.introduce}}</h2>
+            <h2>商品所有者: {{ s.belongTo}}</h2>
+            
             <hr/>
             <h3>商品展示:</h3>
             <br/>
@@ -28,14 +30,14 @@
 </style>
 
 <script setup>
-import axios from 'axios';
-import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
-
+    import axios from 'axios';
+    import { onMounted, ref } from 'vue';
+    import { useRoute } from 'vue-router';
+    const route = useRoute()
 
 
     const s = ref({})
-    const route = useRoute()
+    
 
     function getDetails(){
         axios.get("api/find",{

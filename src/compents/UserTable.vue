@@ -6,12 +6,11 @@
 
   <div v-if="showMenu" class="menu-box">
     <p class="menu-item" @click="goProfile">个人中心</p>
-    <p class="menu-item" @click="   ">我的物品</p>
+    <p class="menu-item" @click="goUserGoods">我的仓库</p>
     <p class="menu-item" @click="logout">退出登录</p>
   </div>
 </div>
 
-<!-- 点击背景关闭 -->
 <div v-if="showMenu" class="mask" @click="showMenu=false"></div>
 
 
@@ -32,6 +31,10 @@
 
     function goProfile(){
         router.push("/user")
+        showMenu.value = false
+    }
+    function goUserGoods(){
+        router.push("/userGoods")
         showMenu.value = false
     }
     async function logout(){
@@ -74,30 +77,55 @@
     .menu-box{
         position: absolute;
         right: 0;
-        margin-top: 10px;
+        margin-top: 12px;
 
-        width: clamp(120px, 22vw, 160px); 
+        width: clamp(130px, 22vw, 170px);
 
-        background: rgba(255,255,255,0.95);
-        border-radius: 12px;
-        text-align: center;
+        background: linear-gradient(135deg, rgba(255,255,255,.98), rgba(245,245,245,.9));
+        border-radius: 14px;
         padding: 10px 0;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.25);
-        backdrop-filter: blur(4px);
+        text-align: center;
+
+        box-shadow:
+            0 10px 25px rgba(0,0,0,0.25),
+            inset 0 0 1px rgba(255,255,255,.9);
+
+        border: 1px solid rgba(255,255,255,.7);
+        backdrop-filter: blur(6px);
+
+        animation: drop 0.18s ease-out;
     }
 
+    /* 下拉出现动画 */
+    @keyframes drop{
+        from{
+            opacity: 0;
+            transform: translateY(-8px) scale(.96);
+        }
+        to{
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
 
+    /* 每个菜单项 */
     .menu-item{
-        padding: clamp(8px, 2vh, 12px) 0;
-        cursor: pointer;
+        padding: 10px 0;
         color: #333;
-        font-size: clamp(12px, 2.2vw, 14px);
+        font-weight: 500;
+        letter-spacing: .5px;
+        cursor: pointer;
+        transition: .18s;
+        border-radius: 10px;
+        margin: 2px 8px;
     }
 
+    /* hover 效果：柔和高亮 + 轻微放大 */
     .menu-item:hover{
-        background: rgba(0,0,0,0.12);
+        background: rgba(255,120,120,.15);
+        color: #ff5e57;
+        transform: translateX(2px);
     }
-
 
     .mask{
         position: fixed;

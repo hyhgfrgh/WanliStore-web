@@ -6,7 +6,7 @@ import Register from "@/pages/register.vue";
 import AddGoods from "@/pages/addGoods.vue";
 import UpdateGoods from "@/pages/updateGoods.vue";
 import User from "@/pages/user.vue";
-
+import UserGoods from "@/pages/userGoods.vue";
 const routes = [
     {
         path: '/',
@@ -39,6 +39,10 @@ const routes = [
         path: '/user',
         name: 'user',
         component: User
+    },{
+        path: '/userGoods',
+        name: 'userGoods',
+        component: UserGoods
     }
 
 ]

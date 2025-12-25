@@ -19,7 +19,7 @@
 
         
         <p><strong>用户名：</strong>{{ user.username }}</p>
-        <p><strong>用户名：</strong>{{ user.nickname }}</p>
+        <p><strong>昵称：</strong>{{ user.nickname }}</p>
         <p><strong>邮箱：</strong>{{ user.email }}</p>
         <p><strong>ID：</strong>{{ user.id }}</p>
         <p><strong>角色：</strong>{{ user.role || '普通用户' }}</p>

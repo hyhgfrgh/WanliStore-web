@@ -52,7 +52,7 @@
 
 <script setup>
   import axios from 'axios'
-  import { ref } from 'vue'
+  import { ref,onMounted } from 'vue'
   import { useRouter } from "vue-router"
 
   const router = useRouter()
@@ -64,10 +64,19 @@
   const stock = ref("")
   const introduce = ref("")
   const uploading = ref(false)
+  const user = ref("")
+  async function getUserInfo() {
+      user.value = JSON.parse(localStorage.getItem("userInfo"))
+
+  }
+  onMounted(() => {
+      getUserInfo()
+  })  
 
   function add() {
     axios.get("/api/add", {
       params: {
+        id: user.value.id,
         name: name.value,
         img_url: img_url.value,
         category: category.value,
