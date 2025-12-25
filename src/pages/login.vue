@@ -1,5 +1,5 @@
 <template>
-    <div class="page-background">
+    <div class="page-background" @click.self="router.replace('/')">
         <div class="login-container">
             <h2>用户登录</h2>
         
@@ -35,9 +35,9 @@
     import { useRouter } from 'vue-router';
     import axios from 'axios';
     import { hasToken } from '@/store/auth';
+    import router from '@/router';
 
-
-    const router = useRouter();
+    // const router = useRouter();
 
     const credentials = reactive({
         username: '',

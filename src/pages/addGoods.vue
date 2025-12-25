@@ -23,9 +23,10 @@
 
         <div class="upload-row">
           <input type="file" @change="handleFile" accept="image/*" />
-          <button class="main-btn" @click="uploadImage" :disabled="!file">
-            上传图片
+          <button class="main-btn" :class="{ uploading: uploading }" @click="uploadImage" :disabled="!file || uploading">
+            {{ uploading ? "正在上传..." : "上传图片" }}
           </button>
+
         </div>
 
         <p v-if="!name" class="warn">未输入商品名称</p>
@@ -50,176 +51,203 @@
 
 
 <script setup>
-import axios from 'axios'
-import { ref } from 'vue'
-import { useRouter } from "vue-router"
+  import axios from 'axios'
+  import { ref } from 'vue'
+  import { useRouter } from "vue-router"
 
-const router = useRouter()
+  const router = useRouter()
 
-const name = ref("")
-const img_url = ref("")
-const category = ref("")
-const price = ref("")
-const stock = ref("")
-const introduce = ref("")
+  const name = ref("")
+  const img_url = ref("")
+  const category = ref("")
+  const price = ref("")
+  const stock = ref("")
+  const introduce = ref("")
+  const uploading = ref(false)
 
-function add() {
-  axios.get("/api/add", {
-    params: {
-      name: name.value,
-      img_url: img_url.value,
-      category: category.value,
-      price: price.value,
-      stock: stock.value,
-      introduce: introduce.value
+  function add() {
+    axios.get("/api/add", {
+      params: {
+        name: name.value,
+        img_url: img_url.value,
+        category: category.value,
+        price: price.value,
+        stock: stock.value,
+        introduce: introduce.value
+      }
+    }).then(() => {
+      clearForm()
+      router.push("/")   // 保存后返回首页
+    })
+  }
+
+  const file = ref(null)
+
+  function handleFile(e) {
+    file.value = e.target.files[0]
+  }
+
+  async function uploadImage() {
+    if (!file.value) return alert("请选择图片")
+
+    uploading.value = true
+
+    try {
+      const form = new FormData()
+      form.append("file", file.value)
+      form.append("strategy_id", 1)
+
+      const res = await axios.post(
+        "http://image.wanli.zhiyuansofts.cn/api/v1/upload",
+        form,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      )
+
+      img_url.value = res.data.data.links.url
+      file.value = null
+    } catch (err) {
+      alert("上传失败，请重试")
+    } finally {
+      uploading.value = false
     }
-  }).then(() => {
-    clearForm()
-    router.push("/")   // 保存后返回首页
-  })
-}
+  }
 
-const file = ref(null)
 
-function handleFile(e) {
-  file.value = e.target.files[0]
-}
+  function clearForm() {
+    name.value = ""
+    img_url.value = ""
+    category.value = ""
+    price.value = ""
+    stock.value = ""
+    introduce.value = ""
+  }
 
-async function uploadImage() {
-  if (!file.value) return alert("请选择图片")
-
-  const form = new FormData()
-  form.append("file", file.value)
-  form.append("strategy_id", 1)
-
-  const res = await axios.post("http://image.wanli.zhiyuansofts.cn/api/v1/upload", form, {
-    headers: { "Content-Type": "multipart/form-data" }
-  })
-
-  img_url.value = res.data.data.links.url
-  file.value = null
-}
-
-function clearForm() {
-  name.value = ""
-  img_url.value = ""
-  category.value = ""
-  price.value = ""
-  stock.value = ""
-  introduce.value = ""
-}
-
-function goBack(){
-  router.push("/")
-}
+  function goBack(){
+    router.push("/")
+  }
 </script>
 
 
 <style scoped>
 
-.page-background{
-  position: fixed;
-  inset: 0;
-  background-image: url('/img/yeshijie.png');
-  background-size: cover;
-  background-position: center;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
+  .page-background{
+    position: fixed;
+    inset: 0;
+    background-image: url('/img/yeshijie.png');
+    background-size: cover;
+    background-position: center;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+  }
 
-.page-background::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,0.25);
-  backdrop-filter:blur(2px);
-}
+  .page-background::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,0.25);
+    backdrop-filter:blur(2px);
+  }
 
-.add-container{
-  position:relative;
-  width: 60%;
-  padding: 25px;
+  .add-container{
+    position:relative;
+    width: 60%;
+    padding: 25px;
 
-  background: rgba(255,255,255,0.15);
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.3);
-  backdrop-filter: blur(6px);
+    background: rgba(255,255,255,0.15);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(6px);
 
-  color:white;
-  text-align:center;
-}
+    color:white;
+    text-align:center;
+  }
 
-h2{
-  margin-bottom:15px;
-}
+  h2{
+    margin-bottom:15px;
+  }
 
-.form{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
+  .form{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
 
-input, textarea{
-  padding:10px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.6);
-  background: rgba(255,255,255,0.15);
-  color:white;
-}
+  input, textarea{
+    padding:10px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.15);
+    color:white;
+  }
 
-input:focus, textarea:focus{
-  outline:none;
-  border-color:#ff7675;
-}
+  input:focus, textarea:focus{
+    outline:none;
+    border-color:#ff7675;
+  }
 
-.upload-row{
-  display:flex;
-  gap:10px;
-}
+  .upload-row{
+    display:flex;
+    gap:10px;
+  }
 
-.warn{
-  color:#e63333;
-}
+  .warn{
+    color:#e63333;
+  }
 
-.preview img{
-  width:100px;
-  border-radius:10px;
-  margin-top:5px;
-}
+  .preview img{
+    width:100px;
+    border-radius:10px;
+    margin-top:5px;
+  }
 
-.btn-group{
-  display:flex;
-  justify-content:space-between;
-  margin-top:10px;
-}
+  .btn-group{
+    display:flex;
+    justify-content:space-between;
+    margin-top:10px;
+  }
 
-/* 和 center-box 一致的按钮 */
-.main-btn{
-  padding: 10px 20px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
+  /* 和 center-box 一致的按钮 */
 
-  background: #ff7675;
-  color: white;
-  font-weight: bold;
-  transition: .2s;
-}
-.main-btn:hover{
-  background:#ff4d4d;
-}
+  .main-btn{
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    background: #ff7675;
+    color: white;
+    font-weight: bold;
+    transition: .2s;
+  }
 
-.cancel-btn{
-  padding: 10px 20px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  background: gray;
-  color:white;
-}
-.cancel-btn:hover{
-  background:#555;
-}
+  .main-btn:hover{
+    background:#ff4d4d;
+  }
+
+  /* 上传中状态 */
+  .main-btn.uploading{
+    background: #888;        /* 灰色 */
+    cursor: not-allowed;
+    opacity: 0.8;
+  }
+
+  /* disabled 兼容态（确保所有情况一致） */
+  .main-btn:disabled{
+    background:#888;
+    cursor:not-allowed;
+    opacity:0.8;
+  }
+
+  .cancel-btn{
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    background: gray;
+    color:white;
+  }
+  .cancel-btn:hover{
+    background:#555;
+  }
 
 </style>

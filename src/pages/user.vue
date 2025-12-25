@@ -7,7 +7,7 @@
 
       <div v-if="loading" class="loading">
         正在加载用户信息...
-      </div>
+      </div> 
 
       <div v-else-if="!user">
         未能获取用户信息
@@ -60,14 +60,15 @@
 <script setup>
     import { ref, onMounted } from "vue"
     import { useRouter } from "vue-router"
-
-    const router = useRouter()
+    import router from "@/router"
+    import { hasToken } from "@/store/auth"
+    // const router = useRouter()
 
     // 用户数据
     const user = ref(null)
     const loading = ref(true)
 
-    const defaultAvatar = "/img/ye.png"
+    const defaultAvatar = "/img/touxiang.png"
 
     async function getUserInfo() {
         user.value = JSON.parse(localStorage.getItem("userInfo"))
@@ -76,42 +77,42 @@
     }
 
     function logout(){
-        localStorage.removeItem("token")
-        alert("已退出登录")
+      localStorage.removeItem("token")
+      hasToken.value = false
+      alert("已退出登录")
         router.replace("/login")
-        }
-
-        function goHome(){
+      }
+      function goHome(){
         router.push("/")
-        }
-
-        onMounted(() => {
-          getUserInfo()
-      })
-
-      const editing = ref(false)
-      const editEmail = ref("")
-      const editAvatar = ref("")
-
-      function cancelEdit(){
-        editing.value = false
       }
 
-      function saveInfo(){
-        if(!editEmail.value){
-          alert("邮箱不能为空")
-          return
-        }
+      onMounted(() => {
+        getUserInfo()
+    })
 
-        // 更新 user（页面响应式）
-        user.value.email = editEmail.value
-        user.value.avatar_url = editAvatar.value
+    const editing = ref(false)
+    const editEmail = ref("")
+    const editAvatar = ref("")
 
-        localStorage.setItem("userInfo", JSON.stringify(user.value))
+    function cancelEdit(){
+      editing.value = false
+    }
 
-        alert("修改成功")
-        editing.value = false
+    function saveInfo(){
+      if(!editEmail.value){
+        alert("邮箱不能为空")
+        return
       }
+
+      // 更新 user（页面响应式）
+      user.value.email = editEmail.value
+      user.value.avatar_url = editAvatar.value
+
+      localStorage.setItem("userInfo", JSON.stringify(user.value))
+
+      alert("修改成功")
+      editing.value = false
+    }
 
 </script>
 

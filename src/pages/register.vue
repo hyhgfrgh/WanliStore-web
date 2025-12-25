@@ -1,5 +1,5 @@
 <template>
-    <div  class="page-background">
+    <div  class="page-background" @click.self="router.replace('/')">
         <div v-if="!registerSuccess" class="register-container">
             <h2>用户注册</h2>
             <form @submit.prevent="handleLogin" class="login-form">
@@ -43,7 +43,7 @@
 <script setup>
     import { ref } from 'vue'
     import axios from 'axios'
-
+    import router from '@/router'
     const username = ref(""),nickname = ref(""),password = ref(""),repassword = ref("")
     const message = ref(""),registerSuccess = ref(false),isLoading = ref(false)
     const validate = () => {

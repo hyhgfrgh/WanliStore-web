@@ -1,6 +1,6 @@
 <template> <div class="page-background">
 
-    <h1>商店交易系统</h1>
+    <h1>xxxxx系统</h1>
     <h3>制作人:
         xxxx</h3>
     <p>学校:
