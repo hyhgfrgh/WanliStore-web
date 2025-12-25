@@ -3,20 +3,23 @@
     <h1>xxxxx系统</h1>
     <h3>制作人:
         xxxx</h3>
-    <p>学校:
-        <a style="color:blueviolet;" href="https://www.cwxu.edu.cn/"title="无锡学院官网链接">
-            Wuxi University
+      <p>项目地址:
+        <a style="color:greenyellow;" href="https://github.com/hyhgfrgh/WanliStore-web">
+          WanliStore-web
         </a>
-    </p>
+      </p>
+
     <hr>
 
     <div v-if="!hasToken" class="fixed-nav-buttons">
         <button @click="toRegister">注册</button>
         <button @click="toLogin">登录</button>
+        
     </div>
     <div v-else class="fixed-nav-buttons">
-        <button @click="toUser">主页</button>
-        <button @click="Exit">退出登陆</button>
+        <!-- <button @click="toUser">主页</button> -->
+        <!-- <button @click="Exit">退出登陆</button> -->
+        <UserTable />
     </div>
       
     <show :s="s" />
@@ -30,48 +33,47 @@
 
 <!-- js -->
 <script setup>
-import axios from 'axios';
-import { onMounted, ref } from 'vue';
-import Show from '../compents/show.vue';
-import DeleteById from '@/compents/DeleteById.vue';
-import DeleteAll from '@/compents/DeleteAll.vue';
-import router from '@/router';
-import { hasToken } from '@/store/auth';
+  import axios from 'axios';
+  import { onMounted, ref } from 'vue';
+  import Show from '../compents/show.vue';
+  import DeleteById from '@/compents/DeleteById.vue';
+  import DeleteAll from '@/compents/DeleteAll.vue';
+  import UserTable from '@/compents/UserTable.vue';
+  import router from '@/router';
+  import { hasToken } from '@/store/auth';
 
 
 
-    const s = ref([]);
-    
-    function getList(){
-        axios.get("/api/list").then((data)=>{
-            // console.log(data.data[0].name)
-            s.value = data.data.data
-            console.log(data.data.message)
+  const s = ref([]);
+  
+  function getList(){
+      axios.get("/api/list").then((data)=>{
+          // console.log(data.data[0].name)
+          s.value = data.data.data
+          console.log(data.data.message)
 
-        })
-    }
+      })
+  }
 
-    const toLogin = () => {
-        window.location.href = '/login';
-    }
-    const toUser = () => {
-        window.location.href = '/user';
-    }
-    const toRegister = () => {
-        window.location.href = '/register';
-    }
-    const Exit = () => {
-        hasToken.value = false
-        localStorage.removeItem("userInfo")
-        alert("已退出登录")
-        router.replace("/home")
-    }
-    
-    onMounted(()=>{
-        getList()   
-    })
-
-
+  const toLogin = () => {
+      window.location.href = '/login';
+  }
+  const toUser = () => {
+      window.location.href = '/user';
+  }
+  const toRegister = () => {
+      window.location.href = '/register';
+  }
+  const Exit = () => {
+      hasToken.value = false
+      localStorage.removeItem("userInfo")
+      alert("已退出登录")
+      router.replace("/home")
+  }
+  
+  onMounted(()=>{
+      getList()   
+  })
 </script>
 
 

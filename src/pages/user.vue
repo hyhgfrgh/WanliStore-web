@@ -75,16 +75,18 @@
   const user = ref(null)
   const loading = ref(true)
 
-  const defaultAvatar = "/img/touxiang.png"
+  const defaultAvatar = "/img/default.png"
 
   async function getUserInfo() {
       user.value = JSON.parse(localStorage.getItem("userInfo"))
 
       loading.value = false
   }
-
+  onMounted(() => {
+      getUserInfo()
+  })  
   async function logout(){
-    if(!confirm("确定要注销账号吗？此操作不可恢复！")){
+    if(!confirm("确定要推出登陆账号吗？")){
       return;
     }
     localStorage.removeItem("userInfo")
@@ -97,9 +99,7 @@
     router.push("/")
   }
 
-  onMounted(() => {
-      getUserInfo()
-  })  
+  
 
   const editing = ref(false)
   const editEmail = ref(""), editAvatar = ref(""), editNickname = ref("")

@@ -40,7 +40,6 @@
     const error = ref('');
     const triedSubmit = ref(false);
 
-
     // 登录校验，统一逻辑
     const validate = () => {
         if(!username.value) return "请填写用户名"
