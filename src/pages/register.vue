@@ -104,22 +104,22 @@
 <style scoped>
 
     .page-background {
-    position: relative;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
 
-    background-image: url('/img/yeshijie.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+        background-image: url('/img/yeshijie.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-    background-color: rgba(0,0,0,0.3);
+        background-color: rgba(0,0,0,0.3);
     }
 
     .page-background::before{

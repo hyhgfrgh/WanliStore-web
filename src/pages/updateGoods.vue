@@ -1,6 +1,6 @@
 <template>
 
-  <div class="page-background"  @click.self="router.replace('/')">
+  <div class="page-background"  @click.self="uploading ? null : router.replace('/userGoods')">
 
     <div class="add-container">
 
@@ -53,16 +53,17 @@
     import axios from 'axios'
     import { ref } from 'vue'
     import { useRouter } from 'vue-router'
-
+    import { useRoute } from 'vue-router'
     const router = useRouter()
+    const route = useRoute()
 
-    const update_id = ref("")
-    const update_name = ref("")
-    const update_img_url = ref("")
-    const update_category = ref("")
-    const update_price = ref("")
-    const update_stock = ref("")
-    const update_introduce = ref("")
+    const update_id = ref(route.query.id)
+    const update_name = ref(route.query.name)
+    const update_img_url = ref(route.query.img_url)
+    const update_category = ref(route.query.category)
+    const update_price = ref(route.query.price)
+    const update_stock = ref(route.query.stock)
+    const update_introduce = ref(route.query.introduce)
 
     function update() {
 

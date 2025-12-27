@@ -23,7 +23,7 @@
     import { hasToken } from "@/store/auth"
     const showMenu = ref(false)
 
-    const user = ref(JSON.parse(localStorage.getItem("userInfo")))
+    const user = ref(JSON.parse(localStorage.getItem("userInfo")) || {})
 
     function toggleMenu(){
         showMenu.value = !showMenu.value

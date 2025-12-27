@@ -1,6 +1,6 @@
 <template>
 
-  <div class="page-background" @click.self="router.replace('/')">
+  <div class="page-background"  @click.self="uploading ? null : router.replace('/userGoods')">
 
     <div class="add-container">
 
