@@ -1,10 +1,5 @@
 <template>
   <div class="showcase-container">
-    <div class="section-header">
-      <h2 class="section-title">热门商品推荐</h2>
-      <p class="section-subtitle">探索精选好物，发现心仪之选</p>
-    </div>
-    
     <div v-if="s.length > 0" class="product-grid">
       <div v-for="item in s" :key="item.id" class="product-card" @click="goToDetails(item.id)">
         <div class="product-image">
@@ -54,14 +49,13 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import { ref,onMounted } from 'vue';
-import UserTable from './UserTable.vue';
 import axios from 'axios';
 const router = useRouter();
 const s = ref([]);
   
 function getList(){
     axios.get("/api/list").then((data)=>{
-        s.value = data.data.data.slice(0,6)
+        s.value = data.data.data
         console.log(data.data.message)
     })
 }
@@ -94,7 +88,7 @@ const goToDetails = (id) => {
   font-size: 32px;
   font-weight: 700;
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  background: linear-gradient(135deg, #7dcbea 0%, #4b82a2 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

@@ -31,7 +31,7 @@
 
             </form>
         </div>
-        <div v-else class="login-container">
+        <div v-else class="register-container">
             <h1 style="color: green;">注册成功！</h1>
             <div>
                 点击 <router-link to="/login">此处</router-link> 跳转至登陆页面
@@ -133,7 +133,7 @@
 
     /* 登录容器 */
     .register-container {
-    width: 60%;
+        width: 60%;
         margin: 40px auto;
         padding: 25px;
 
@@ -150,37 +150,37 @@
 
     /* 标题 */
     .register-container h2{
-    margin-bottom: 20px;
-    letter-spacing: 2px;
-    font-size: 28px;
+        margin-bottom: 20px;
+        letter-spacing: 2px;
+        font-size: 28px;
     }
 
     /* 表单布局 */
     .login-form {
-    display: flex;
-    flex-direction: column;
+        display: flex;
+        flex-direction: column;
     }
 
     .form-group {
-    text-align: left;
-    margin-bottom: 18px;
+        text-align: left;
+        margin-bottom: 18px;
     }
 
     label {
-    font-weight: bold;
+        font-weight: bold;
     }
 
     /* 输入框 */
     input {
-    width: 100%;
-    padding: 10px;
-    border-radius: 10px;
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px;
 
-    border: 1px solid rgba(255,255,255,0.4);
-    background: rgba(255,255,255,0.2);
-    color:white;
+        border: 1px solid rgba(255,255,255,0.4);
+        background: rgba(255,255,255,0.2);
+        color:white;
 
-    outline: none;
+        outline: none;
     }
 
     input::placeholder{
@@ -205,12 +205,12 @@
 
     /* 注册链接 */
     .register-link{
-    margin-top:15px;
+        margin-top:15px;
     }
 
     .register-link a{
-    color:#ffd37a;
-    font-weight:bold;
+        color:#ffd37a;
+        font-weight:bold;
     }
 
     

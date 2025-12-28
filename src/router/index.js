@@ -7,6 +7,8 @@ import AddGoods from "@/pages/addGoods.vue";
 import UpdateGoods from "@/pages/updateGoods.vue";
 import User from "@/pages/user.vue";
 import UserGoods from "@/pages/userGoods.vue";
+import allGoods from "@/pages/allGoods.vue";
+
 const routes = [
     {
         path: '/',
@@ -43,6 +45,10 @@ const routes = [
         path: '/userGoods',
         name: 'userGoods',
         component: UserGoods
+    },{
+        path: '/allGoods',
+        name: 'allGoods',
+        component: allGoods
     }
 
 ]
