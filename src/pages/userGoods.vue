@@ -196,7 +196,7 @@ onMounted(() => {
   min-height: 100vh;
   width: 100vw;
   /* 你的背景图 */
-  background-image: url('img/yeshijie.png');
+  background-image: url('img/background.png');
   background-position: center;
   background-size: cover;
   background-attachment: fixed; /* 背景固定，滑动时更有质感 */

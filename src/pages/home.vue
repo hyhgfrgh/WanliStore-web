@@ -199,7 +199,7 @@ html, body {
   width: 100%;
   min-height: 100vh;
   overflow-x: hidden;
-  background-image: url('img/yeshijie.png');
+  background-image: url('img/background.png');
   background-size: cover;
   background-position: center;
 }
@@ -211,7 +211,7 @@ html, body {
   background: linear-gradient(
     135deg,
     rgba(0, 0, 0, 0.7) 0%,
-    rgba(0, 0, 0, 0.3) 100%
+    rgba(0, 0, 0, 0.3) 0%
   );
   backdrop-filter: blur(3px);
 }

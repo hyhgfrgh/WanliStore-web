@@ -142,7 +142,7 @@
   .page-background{
     position: fixed;
     inset: 0;
-    background-image: url('/img/yeshijie.png');
+    background-image: url('/img/background.png');
     background-size: cover;
     background-position: center;
     display:flex;
